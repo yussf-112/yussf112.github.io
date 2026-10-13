@@ -12,47 +12,45 @@
   --bg:#dedede; --bg2:#efefef; --hint:rgba(20,20,20,.55); --shadow:rgba(0,0,0,.4);
   --W:300px; --H:312px; --D:12px; --c:30px;
   box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px);
 }
-html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
-body{margin:0;height:100%;overflow:hidden;background-color:#ffffff;background-image:linear-gradient(to right,#e5e5e5 1px,transparent 1px),linear-gradient(to bottom,#e5e5e5 1px,transparent 1px);background-size:20px 20px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-
-.stage{position:relative;width:100%;height:100%;perspective:1500px;perspective-origin:50% 50%;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;--zoom:1;--fit:1;outline:none}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background-color:#ffffff;background-image:linear-gradient(to right,#e5e5e5 1px,transparent 1px),linear-gradient(to bottom,#e5e5e5 1px,transparent 1px);background-size:20px 20px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+ 
+.stage{position:absolute;inset:0;perspective:1500px;perspective-origin:50% 50%;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;--zoom:1;--fit:1;outline:none}
 .stage.grab{cursor:grabbing}
 .stage:focus-visible{outline:2px solid #888;outline-offset:-6px}
-
+ 
 .floor{position:absolute;left:50%;top:calc(50% + var(--zoom) * var(--fit) * 200px);width:calc(var(--zoom) * var(--fit) * 270px);height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center,var(--shadow),transparent 70%);filter:blur(5px);animation:shade 5s ease-in-out infinite}
 .float{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;animation:bob 5s ease-in-out infinite}
 .zoom{position:absolute;left:calc(var(--W) / -2);top:calc(var(--H) / -2);width:var(--W);height:var(--H);transform-style:preserve-3d;transform:scale(calc(var(--zoom) * var(--fit)))}
 .disk{position:relative;width:var(--W);height:var(--H);transform-style:preserve-3d}
-
+ 
 .face{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:linear-gradient(145deg,#4a4a4a,#323232 55%,#262626)}
 .face::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent calc(var(--sh,50%) - 22%),rgba(255,255,255,.17) var(--sh,50%),transparent calc(var(--sh,50%) + 22%))}
 .front{inset:0;transform:translateZ(calc(var(--D) / 2));clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
 .back{inset:0;transform:rotateY(180deg) translateZ(calc(var(--D) / 2));clip-path:polygon(var(--c) 0,100% 0,100% 100%,0 100%,0 var(--c))}
-
+ 
 .side{position:absolute;background:linear-gradient(#3a3a3a,#1c1c1c)}
 .top{left:0;top:calc(var(--D) / -2);width:calc(var(--W) - var(--c));height:var(--D);transform:rotateX(90deg)}
 .bottom{left:0;top:calc(var(--H) - var(--D) / 2);width:var(--W);height:var(--D);transform:rotateX(-90deg)}
 .left{left:calc(var(--D) / -2);top:0;width:var(--D);height:var(--H);transform:rotateY(-90deg)}
 .right{left:calc(var(--W) - var(--D) / 2);top:var(--c);width:var(--D);height:calc(var(--H) - var(--c));transform:rotateY(90deg)}
 .cham{left:calc(var(--W) - var(--c) / 2 - var(--c) * .7071);top:calc(var(--c) / 2 - var(--D) / 2);width:calc(var(--c) * 1.4142);height:var(--D);transform:rotateZ(45deg) rotateX(90deg)}
-
+ 
 .shutter{position:absolute;left:23%;top:0;width:54%;height:21%;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#8e8e8e,#ececec 35%,#c4c4c4 62%,#8a8a8a);box-shadow:inset 0 -3px 5px rgba(0,0,0,.25),0 2px 4px rgba(0,0,0,.35)}
 .shutter::after{content:"";position:absolute;right:12%;top:12%;width:26%;height:72%;background:#0a0a0a;border-radius:2px;box-shadow:inset 0 2px 4px #000}
-
+ 
 .label{position:absolute;left:8%;right:8%;bottom:5%;height:55%;display:flex;align-items:center;justify-content:center;padding-top:24px;box-sizing:border-box;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 24px),#f1f1f1;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1),0 1px 0 rgba(255,255,255,.18)}
 .label::before{content:"side a";position:absolute;left:0;right:0;top:0;height:24px;background:#111;color:#f1f1f1;font:600 12px/24px system-ui,sans-serif;padding-left:10px}
 .label b{font:400 45px/1 "Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;white-space:nowrap;color:#111;transform:rotate(-3deg);text-decoration:underline wavy #111;text-underline-offset:7px;text-decoration-thickness:2px}
-
+ 
 .hub{position:absolute;left:50%;top:50%;width:112px;height:112px;margin:-48px 0 0 -56px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4f4f4,#aaaaaa 55%,#707070);box-shadow:0 0 0 6px rgba(0,0,0,.22),inset 0 0 8px rgba(0,0,0,.35)}
 .hub::before{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;background:#0a0a0a;border-radius:3px;box-shadow:inset 0 1px 3px #000}
 .hub::after{content:"";position:absolute;right:15px;top:50%;width:8px;height:12px;margin-top:-6px;background:#0a0a0a;border-radius:2px}
 .blabel{position:absolute;left:28%;right:28%;bottom:4%;height:11%;display:grid;place-items:center;background:#ebebeb;color:#111;font:700 13px system-ui,sans-serif;letter-spacing:.14em}
-
+ 
 .hint{position:absolute;left:0;right:0;bottom:18px;margin:0;text-align:center;font-size:13px;color:var(--hint);pointer-events:none}
-
+ 
 .floppy{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.3,0,.2,1) .3s,visibility 0s linear 0s}
 .cd{--cdD:280px;position:absolute;left:calc((var(--W) - var(--cdD)) / 2);top:calc((var(--H) - var(--cdD)) / 2);width:var(--cdD);height:var(--cdD);transform-style:preserve-3d;transform:scale(.01) rotateY(-180deg);visibility:hidden;transition:transform .4s cubic-bezier(.6,0,.8,.4),visibility 0s linear .4s}
 .disk.is-cd .floppy{transform:scale(.01) rotateY(180deg);visibility:hidden;transition:transform .45s cubic-bezier(.6,0,.8,.4),visibility 0s linear .45s}
@@ -64,19 +62,41 @@ body{margin:0;height:100%;overflow:hidden;background-color:#ffffff;background-im
 .cd .cdb{transform:rotateY(180deg) translateZ(2px)}
 .cd svg{position:absolute;inset:0;width:100%;height:100%}
 .cd text{font:400 30px "Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;fill:#111;letter-spacing:3px}
-
+ 
 .toggle{position:fixed;left:50%;bottom:calc(52px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);min-height:44px;padding:11px 22px;border:0;border-radius:999px;background:#111;color:#f1f1f1;font:600 14px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
 .toggle:focus-visible{outline:2px solid #888;outline-offset:3px}
 @media (prefers-reduced-motion: reduce){.floppy,.cd{transition:none}}
-
+ 
 .hello{position:fixed;left:50%;top:calc(9% + env(safe-area-inset-top,0px));transform:translateX(-50%);font-size:14pt;color:#111;pointer-events:none}
-
+ 
+.scroller{position:relative;height:900vh}
+.sticky{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden}
+.nbstage{position:absolute;inset:0;perspective:1800px;pointer-events:none}
+.nb{--Wp:250px;--Hp:330px;position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.book{position:absolute;left:0;top:calc(var(--Hp) / -2);width:var(--Wp);height:var(--Hp);transform-style:preserve-3d}
+.leaf{position:absolute;left:0;top:0;width:var(--Wp);height:var(--Hp);transform-origin:left center;transform-style:preserve-3d}
+.pg{position:absolute;inset:0;box-sizing:border-box;padding:34px 22px 22px 34px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:linear-gradient(90deg,rgba(0,0,0,.14),transparent 14px),repeating-linear-gradient(0deg,transparent 0 25px,rgba(0,0,0,.16) 25px 26px),#f6f6f4}
+.pg.b{transform:rotateY(180deg);background:linear-gradient(270deg,rgba(0,0,0,.14),transparent 14px),repeating-linear-gradient(0deg,transparent 0 25px,rgba(0,0,0,.16) 25px 26px),#f6f6f4}
+.pg::before{content:"";position:absolute;top:0;bottom:0;left:28px;width:1px;background:rgba(0,0,0,.22)}
+.pg.b::before{left:auto;right:28px}
+.pg b{display:block;font:400 22px/26px "Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;color:#222}
+.sc{position:absolute;left:34px;height:3px;border-radius:2px;background:rgba(0,0,0,.3)}
+.pg.cov{inset:-6px -6px -6px 0}
+.pg.cov::before{display:none}
+.pg.out{background:linear-gradient(135deg,#2c2c2c,#151515)}
+.pg.in{background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 16px),#d9d9d9}
+.pg.in.b{background:linear-gradient(270deg,rgba(0,0,0,.18),transparent 16px),#d9d9d9}
+.lab{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-4deg);padding:16px 18px;background:#f1f1f1;color:#111;font:400 30px/1 "Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;white-space:nowrap}
+.lab.sm{font-size:16px;padding:7px 10px}
+.cue{position:absolute;left:0;right:0;bottom:calc(28px + env(safe-area-inset-bottom,0px));margin:0;text-align:center;font-size:13px;color:var(--hint)}
+ 
 @keyframes bob{0%,100%{transform:translateY(-6px)}50%{transform:translateY(8px)}}
 @keyframes shade{0%,100%{opacity:.95}50%{opacity:.7}}
 @media (prefers-reduced-motion: reduce){.float,.floor{animation:none}}
 </style>
 </head>
 <body>
+<div class="scroller" id="scroller"><div class="sticky">
 <div class="stage" id="stage" tabindex="0" role="img" aria-label="3D floppy disk labeled ON WORK. Drag or use arrow keys to rotate.">
   <div class="floor"></div>
   <div class="float">
@@ -111,7 +131,9 @@ body{margin:0;height:100%;overflow:hidden;background-color:#ffffff;background-im
   </div>
   <p class="hint">drag to turn it</p>
 </div>
-<div class="hello">hello</div>
+<div class="nbstage"><div class="nb" id="nb"><div class="book" id="book"></div></div><p class="cue" id="cue">scroll down</p></div>
+</div></div>
+<div class="hello" id="hello">hello</div>
 <button class="toggle" id="toggle" type="button">turn into a CD</button>
 <script>
 (function(){
@@ -169,7 +191,57 @@ body{margin:0;height:100%;overflow:hidden;background-color:#ffffff;background-im
     requestAnimationFrame(tick);
   }
   fit(); tick();
+ 
+  /* scroll-driven notebook */
+  var nb=document.getElementById('nb'), book=document.getElementById('book'), cue=document.getElementById('cue');
+  var hello=document.getElementById('hello'), scroller=document.getElementById('scroller');
+  var N=9, G=1.6, WP=250, leaves=[], nbs=1, cur=0, target=0;
+  var heads=['on work','','notes','','to do','','draft','','ideas','','day two','','still working',''];
+  function mk(c){var d=document.createElement('div'); d.className='pg '+c; return d;}
+  function lab(t,sm){var l=document.createElement('div'); l.className='lab'+(sm?' sm':''); l.textContent=t; return l;}
+  function inner(c,t){var d=mk(c),b; if(t){b=document.createElement('b'); b.textContent=t; d.appendChild(b);} return d;}
+  function sheet(c,t,seed){
+    var d=inner(c,t),s,i;
+    for(i=0;i<(t?6:8);i++){s=document.createElement('span'); s.className='sc'; s.style.top=(26*(i+(t?2:1))+16)+'px'; s.style.width=(70+((seed*53+i*37)%100))+'px'; d.appendChild(s);}
+    return d;
+  }
+  (function(){
+    var i,leaf,f,b;
+    for(i=0;i<N;i++){
+      leaf=document.createElement('div'); leaf.className='leaf';
+      if(i===0){f=mk('f cov out'); f.appendChild(lab('ON WORK')); b=inner('b cov in','yussf112');}
+      else if(i===N-1){f=inner('f cov in',''); b=mk('b cov out'); b.appendChild(lab('yussf112',true));}
+      else{f=sheet('f',heads[2*(i-1)],i); b=sheet('b',heads[2*(i-1)+1],i+3);}
+      leaf.appendChild(f); leaf.appendChild(b); book.appendChild(leaf); leaves.push(leaf);
+    }
+  })();
+  function seg(p,a,b){return clamp((p-a)/(b-a),0,1);}
+  function ez(t){return t*t*(3-2*t);}
+  function mix(a,b,t){return a+(b-a)*t;}
+  function nbFit(){nbs=clamp(Math.min(innerWidth*0.9/(2*WP+30),innerHeight*0.8/360),0.35,1.25);}
+  function draw(p){
+    var A=ez(seg(p,0,.14)), B=ez(seg(p,.14,.3)), D=ez(seg(p,.84,.92)), E=ez(seg(p,.92,1)), i, f, s0, op;
+    for(i=0;i<N;i++){
+      if(i===0) f=B; else if(i===N-1) f=D; else {s0=.3+(i-1)*.07; f=ez(seg(p,s0,s0+.09));}
+      leaves[i].style.transform='translateZ('+(mix((N-i)*G,i*G,f)+Math.sin(Math.PI*f)*8)+'px) rotateY('+(-180*f)+'deg)';
+    }
+    book.style.transform='translateX('+(-WP/2*(1-B)+WP/2*D)+'px)';
+    var ry=mix(mix(170,-16,A),0,B); ry=mix(ry,-12,D);
+    var rx=mix(mix(18,10,A),14,B); rx=mix(rx,6,D); rx=mix(rx,-25,E);
+    nb.style.transform='translateY('+(-E*innerHeight*1.25)+'px) rotateX('+rx+'deg) rotateY('+ry+'deg) scale('+(nbs*(0.86+0.14*A))+')';
+    cue.style.opacity=1-seg(p,0,.04);
+    op=seg(p,.9,.98);
+    stage.style.opacity=op; btn.style.opacity=op; hello.style.opacity=op;
+    stage.style.pointerEvents=btn.style.pointerEvents=(op>.9?'auto':'none');
+  }
+  function readScroll(){var max=scroller.offsetHeight-innerHeight; target=max>0?clamp(scrollY/max,0,1):0;}
+  var smooth=matchMedia('(prefers-reduced-motion: reduce)').matches?1:0.12;
+  function nbLoop(){cur+=(target-cur)*smooth; if(Math.abs(target-cur)<0.0004) cur=target; draw(cur); requestAnimationFrame(nbLoop);}
+  addEventListener('scroll',readScroll,{passive:true});
+  addEventListener('resize',function(){nbFit(); readScroll();});
+  nbFit(); readScroll(); cur=target; draw(cur); nbLoop();
 })();
 </script>
 </body>
 </html>
+ 
