@@ -1,17 +1,175 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ON WORK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <style>
-body {
-  background-color: #ffffff;
-  background-image: 
-    linear-gradient(to right, #e5e5e5 1px, transparent 1px),
-    linear-gradient(to bottom, #e5e5e5 1px, transparent 1px);
-  background-size: 20px 20px;
+:root{
+  --bg:#dedede; --bg2:#efefef; --hint:rgba(20,20,20,.55); --shadow:rgba(0,0,0,.4);
+  --W:300px; --H:312px; --D:12px; --c:30px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
 }
-</style>
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;height:100%;overflow:hidden;background-color:#ffffff;background-image:linear-gradient(to right,#e5e5e5 1px,transparent 1px),linear-gradient(to bottom,#e5e5e5 1px,transparent 1px);background-size:20px 20px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 
+.stage{position:relative;width:100%;height:100%;perspective:1500px;perspective-origin:50% 50%;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;--zoom:1;--fit:1;outline:none}
+.stage.grab{cursor:grabbing}
+.stage:focus-visible{outline:2px solid #888;outline-offset:-6px}
+
+.floor{position:absolute;left:50%;top:calc(50% + var(--zoom) * var(--fit) * 200px);width:calc(var(--zoom) * var(--fit) * 270px);height:34px;transform:translateX(-50%);background:radial-gradient(ellipse at center,var(--shadow),transparent 70%);filter:blur(5px);animation:shade 5s ease-in-out infinite}
+.float{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;animation:bob 5s ease-in-out infinite}
+.zoom{position:absolute;left:calc(var(--W) / -2);top:calc(var(--H) / -2);width:var(--W);height:var(--H);transform-style:preserve-3d;transform:scale(calc(var(--zoom) * var(--fit)))}
+.disk{position:relative;width:var(--W);height:var(--H);transform-style:preserve-3d}
+
+.face{position:absolute;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:linear-gradient(145deg,#4a4a4a,#323232 55%,#262626)}
+.face::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent calc(var(--sh,50%) - 22%),rgba(255,255,255,.17) var(--sh,50%),transparent calc(var(--sh,50%) + 22%))}
+.front{inset:0;transform:translateZ(calc(var(--D) / 2));clip-path:polygon(0 0,calc(100% - var(--c)) 0,100% var(--c),100% 100%,0 100%)}
+.back{inset:0;transform:rotateY(180deg) translateZ(calc(var(--D) / 2));clip-path:polygon(var(--c) 0,100% 0,100% 100%,0 100%,0 var(--c))}
+
+.side{position:absolute;background:linear-gradient(#3a3a3a,#1c1c1c)}
+.top{left:0;top:calc(var(--D) / -2);width:calc(var(--W) - var(--c));height:var(--D);transform:rotateX(90deg)}
+.bottom{left:0;top:calc(var(--H) - var(--D) / 2);width:var(--W);height:var(--D);transform:rotateX(-90deg)}
+.left{left:calc(var(--D) / -2);top:0;width:var(--D);height:var(--H);transform:rotateY(-90deg)}
+.right{left:calc(var(--W) - var(--D) / 2);top:var(--c);width:var(--D);height:calc(var(--H) - var(--c));transform:rotateY(90deg)}
+.cham{left:calc(var(--W) - var(--c) / 2 - var(--c) * .7071);top:calc(var(--c) / 2 - var(--D) / 2);width:calc(var(--c) * 1.4142);height:var(--D);transform:rotateZ(45deg) rotateX(90deg)}
+
+.shutter{position:absolute;left:23%;top:0;width:54%;height:21%;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#8e8e8e,#ececec 35%,#c4c4c4 62%,#8a8a8a);box-shadow:inset 0 -3px 5px rgba(0,0,0,.25),0 2px 4px rgba(0,0,0,.35)}
+.shutter::after{content:"";position:absolute;right:12%;top:12%;width:26%;height:72%;background:#0a0a0a;border-radius:2px;box-shadow:inset 0 2px 4px #000}
+
+.label{position:absolute;left:8%;right:8%;bottom:5%;height:55%;display:flex;align-items:center;justify-content:center;padding-top:24px;box-sizing:border-box;background:repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 24px),#f1f1f1;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1),0 1px 0 rgba(255,255,255,.18)}
+.label::before{content:"side a";position:absolute;left:0;right:0;top:0;height:24px;background:#111;color:#f1f1f1;font:600 12px/24px system-ui,sans-serif;padding-left:10px}
+.label b{font:400 45px/1 "Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;white-space:nowrap;color:#111;transform:rotate(-3deg);text-decoration:underline wavy #111;text-underline-offset:7px;text-decoration-thickness:2px}
+
+.hub{position:absolute;left:50%;top:50%;width:112px;height:112px;margin:-48px 0 0 -56px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f4f4f4,#aaaaaa 55%,#707070);box-shadow:0 0 0 6px rgba(0,0,0,.22),inset 0 0 8px rgba(0,0,0,.35)}
+.hub::before{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;background:#0a0a0a;border-radius:3px;box-shadow:inset 0 1px 3px #000}
+.hub::after{content:"";position:absolute;right:15px;top:50%;width:8px;height:12px;margin-top:-6px;background:#0a0a0a;border-radius:2px}
+.blabel{position:absolute;left:28%;right:28%;bottom:4%;height:11%;display:grid;place-items:center;background:#ebebeb;color:#111;font:700 13px system-ui,sans-serif;letter-spacing:.14em}
+
+.hint{position:absolute;left:0;right:0;bottom:18px;margin:0;text-align:center;font-size:13px;color:var(--hint);pointer-events:none}
+
+.floppy{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.3,0,.2,1) .3s,visibility 0s linear 0s}
+.cd{--cdD:280px;position:absolute;left:calc((var(--W) - var(--cdD)) / 2);top:calc((var(--H) - var(--cdD)) / 2);width:var(--cdD);height:var(--cdD);transform-style:preserve-3d;transform:scale(.01) rotateY(-180deg);visibility:hidden;transition:transform .4s cubic-bezier(.6,0,.8,.4),visibility 0s linear .4s}
+.disk.is-cd .floppy{transform:scale(.01) rotateY(180deg);visibility:hidden;transition:transform .45s cubic-bezier(.6,0,.8,.4),visibility 0s linear .45s}
+.disk.is-cd .cd{transform:none;visibility:visible;transition:transform .55s cubic-bezier(.2,.8,.2,1) .35s,visibility 0s linear .35s}
+.cd .cdf,.cd .cdb,.cd .cdr{inset:0;border-radius:50%;-webkit-mask:radial-gradient(circle,transparent 17px,#000 18px);mask:radial-gradient(circle,transparent 17px,#000 18px)}
+.cd .cdr{position:absolute;background:#9b9b9b}
+.cd .cdf,.cd .cdb{background:radial-gradient(circle,transparent 0 18px,rgba(255,255,255,.7) 18px 42px,rgba(0,0,0,.25) 42px 43px,transparent 43px),conic-gradient(from 20deg,#ececec,#8d8d8d 12%,#f7f7f7 25%,#7a7a7a 38%,#dedede 50%,#898989 63%,#f3f3f3 75%,#767676 88%,#ececec)}
+.cd .cdf{transform:translateZ(2px)}
+.cd .cdb{transform:rotateY(180deg) translateZ(2px)}
+.cd svg{position:absolute;inset:0;width:100%;height:100%}
+.cd text{font:400 30px "Permanent Marker","Segoe Print","Bradley Hand","Marker Felt","Comic Sans MS",cursive;fill:#111;letter-spacing:3px}
+
+.toggle{position:fixed;left:50%;bottom:calc(52px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);min-height:44px;padding:11px 22px;border:0;border-radius:999px;background:#111;color:#f1f1f1;font:600 14px system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer}
+.toggle:focus-visible{outline:2px solid #888;outline-offset:3px}
+@media (prefers-reduced-motion: reduce){.floppy,.cd{transition:none}}
+
+.hello{position:fixed;left:50%;top:calc(9% + env(safe-area-inset-top,0px));transform:translateX(-50%);font-size:14pt;color:#111;pointer-events:none}
+
+@keyframes bob{0%,100%{transform:translateY(-6px)}50%{transform:translateY(8px)}}
+@keyframes shade{0%,100%{opacity:.95}50%{opacity:.7}}
+@media (prefers-reduced-motion: reduce){.float,.floor{animation:none}}
+</style>
+</head>
 <body>
-  <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:14pt">
-    hello
+<div class="stage" id="stage" tabindex="0" role="img" aria-label="3D floppy disk labeled ON WORK. Drag or use arrow keys to rotate.">
+  <div class="floor"></div>
+  <div class="float">
+    <div class="zoom">
+      <div class="disk" id="disk">
+        <div class="floppy" id="floppy">
+        <div class="side top"></div>
+        <div class="side bottom"></div>
+        <div class="side left"></div>
+        <div class="side right"></div>
+        <div class="side cham"></div>
+        <div class="face front">
+          <div class="shutter"></div>
+          <div class="label"><b>ON WORK</b></div>
+        </div>
+        <div class="face back">
+          <div class="shutter"></div>
+          <div class="hub"></div>
+          <div class="blabel">yussf112</div>
+        </div>
+        </div>
+        <div class="cd" id="cd">
+          <div class="cdr" style="transform:translateZ(-1.5px)"></div>
+          <div class="cdr" style="transform:translateZ(-.5px)"></div>
+          <div class="cdr" style="transform:translateZ(.5px)"></div>
+          <div class="cdr" style="transform:translateZ(1.5px)"></div>
+          <div class="face cdf"><svg viewBox="0 0 280 280" aria-hidden="true"><defs><path id="arcF" d="M40,140 a100,100 0 1,1 200,0 a100,100 0 1,1 -200,0"/></defs><circle cx="140" cy="140" r="128" fill="none" stroke="rgba(0,0,0,.3)"/><circle cx="140" cy="140" r="76" fill="none" stroke="rgba(0,0,0,.3)"/><text><textPath href="#arcF" startOffset="25%" text-anchor="middle">ON WORK</textPath></text></svg></div>
+          <div class="face cdb"><svg viewBox="0 0 280 280" aria-hidden="true"><defs><path id="arcB" d="M40,140 a100,100 0 1,1 200,0 a100,100 0 1,1 -200,0"/></defs><circle cx="140" cy="140" r="128" fill="none" stroke="rgba(0,0,0,.3)"/><circle cx="140" cy="140" r="76" fill="none" stroke="rgba(0,0,0,.3)"/><text><textPath href="#arcB" startOffset="25%" text-anchor="middle">yussf112</textPath></text></svg></div>
+        </div>
+      </div>
+    </div>
   </div>
+  <p class="hint">drag to turn it</p>
+</div>
+<div class="hello">hello</div>
+<button class="toggle" id="toggle" type="button">turn into a CD</button>
+<script>
+(function(){
+  var stage=document.getElementById('stage'), disk=document.getElementById('disk');
+  var HOME_X=-14, HOME_Y=-28;
+  var rx=HOME_X, ry=HOME_Y, vx=0, vy=0, zoom=1, dragging=false, reset=false, lx=0, ly=0;
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function fit(){
+    var f=Math.min(1.15, innerWidth*0.84/300, innerHeight*0.66/312);
+    stage.style.setProperty('--fit', f.toFixed(3));
+  }
+  function paint(){
+    disk.style.transform='rotateX('+rx+'deg) rotateY('+ry+'deg)';
+    var sh=50+70*Math.sin((ry+rx*0.6)*Math.PI/180);
+    disk.style.setProperty('--sh', sh.toFixed(1)+'%');
+    stage.style.setProperty('--zoom', zoom.toFixed(3));
+  }
+  stage.addEventListener('pointerdown',function(e){
+    dragging=true; reset=false; lx=e.clientX; ly=e.clientY; vx=0; vy=0;
+    stage.setPointerCapture(e.pointerId); stage.classList.add('grab');
+  });
+  stage.addEventListener('pointermove',function(e){
+    if(!dragging) return;
+    var dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
+    ry+=dx*0.5; rx=clamp(rx-dy*0.5,-80,80); vy=dx*0.5; vx=-dy*0.5;
+  });
+  function end(){dragging=false; stage.classList.remove('grab');}
+  stage.addEventListener('pointerup',end);
+  stage.addEventListener('pointercancel',end);
+  
+  
+  stage.addEventListener('keydown',function(e){
+    var k={ArrowLeft:[0,-10],ArrowRight:[0,10],ArrowUp:[-10,0],ArrowDown:[10,0]}[e.key];
+    if(k){e.preventDefault(); reset=false; rx=clamp(rx+k[0],-80,80); ry+=k[1];}
+  });
+  addEventListener('resize',fit);
+  var btn=document.getElementById('toggle');
+  btn.addEventListener('click',function(){
+    var on=disk.classList.toggle('is-cd');
+    btn.textContent=on?'turn back into a floppy':'turn into a CD';
+    stage.setAttribute('aria-label',on?'3D compact disc labeled ON WORK. Drag or use arrow keys to rotate.':'3D floppy disk labeled ON WORK. Drag or use arrow keys to rotate.');
+    reset=false; vx=0; vy=7;
+  });
+  function tick(){
+    if(!dragging){
+      if(reset){
+        var ty=HOME_Y+360*Math.round((ry-HOME_Y)/360);
+        rx+=(HOME_X-rx)*0.12; ry+=(ty-ry)*0.12;
+        if(Math.abs(rx-HOME_X)<0.05 && Math.abs(ry-ty)<0.05){rx=HOME_X; ry=ty; reset=false;}
+      } else {
+        ry+=vy; rx=clamp(rx+vx,-80,80); vx*=0.94; vy*=0.94;
+      }
+    }
+    paint();
+    requestAnimationFrame(tick);
+  }
+  fit(); tick();
+})();
+</script>
 </body>
 </html>
